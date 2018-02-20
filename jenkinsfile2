@@ -19,6 +19,11 @@ pipeline {
       steps {
         sh 'ant -f build.xml -v'
       }
+      post {
+        success {
+          archiveArtifacts artifacts: 'dist/*.jar', fingerprint: true
+        }
+      }
     }
     stage ('Deploy') {
       agent {
@@ -34,12 +39,6 @@ pipeline {
         sh "wget http://shashinp1.mylabserver.com/rectangles/all/rectangle*.jar"
         sh "java -jar rectangle*.jar 3 4"
       }
-    }
-  }
-
-  post {
-    always {
-      archive 'dist/*.jar'
     }
   }
 }
